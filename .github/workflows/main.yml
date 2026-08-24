@@ -1,0 +1,45 @@
+name: Shopping Cart useReducer Autograding
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Student Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Check Required Files
+        run: |
+          test -f src/App.jsx
+          test -f src/App.test.jsx
+          test -f src/main.jsx
+          test -f README.md
+
+      - name: Check useReducer Implementation
+        run: |
+          grep -q "useReducer" src/App.jsx
+          grep -q "ADD_TO_CART" src/App.jsx
+          grep -q "REMOVE_FROM_CART" src/App.jsx
+          grep -q "CLEAR_CART" src/App.jsx
+
+      - name: Run Automated Tests
+        run: npm test -- --watchAll=false
+
+      - name: Build React Application
+        run: npm run build
+
+      - name: Autograding Passed
+        run: echo "Shopping Cart useReducer assignment passed successfully!"
